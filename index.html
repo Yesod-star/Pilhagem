@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sangue Plantado — Crônica V5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#170D12;
+    --panel:#221319;
+    --panel-raised:#2B171E;
+    --line: rgba(184,147,90,0.22);
+    --gold:#B8935A;
+    --gold-bright:#D9B27C;
+    --blood:#8A2233;
+    --blood-bright:#B33A4C;
+    --ink:#EFE5DD;
+    --ink-muted:#AD939C;
+    --ink-faint:#7C6670;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(138,34,51,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 600px at 100% 20%, rgba(184,147,90,0.08), transparent 55%),
+      var(--void);
+    color:var(--ink);
+    font-family:'Libre Franklin', sans-serif;
+    font-weight:400;
+    min-height:100vh;
+  }
+  h1,h2,h3,h4,.display{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  ::selection{ background:var(--blood); color:var(--ink); }
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns: 260px 1fr;
+    max-width:1280px;
+    margin:0 auto;
+    min-height:100vh;
+  }
+  @media (max-width: 860px){
+    .shell{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    border-right:1px solid var(--line);
+    padding:34px 22px 34px 28px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  @media (max-width: 860px){
+    .sidebar{ position:static; height:auto; border-right:none; border-bottom:1px solid var(--line); padding:24px 20px; }
+  }
+  .brand{
+    margin-bottom:6px;
+  }
+  .brand .glyph{
+    width:34px; height:34px; display:block; margin-bottom:14px;
+    color:var(--gold);
+  }
+  .brand h1{
+    font-size:1.7rem;
+    line-height:1.05;
+    margin:0 0 2px 0;
+    color:var(--gold-bright);
+  }
+  .brand .subtitle{
+    font-size:0.72rem;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-weight:500;
+  }
+  .route{
+    color:var(--ink-muted);
+    font-size:0.86rem;
+    font-style:italic;
+    margin:14px 0 26px 0;
+    padding-left:12px;
+    border-left:2px solid var(--blood);
+    line-height:1.5;
+  }
+  .route b{ color:var(--gold-bright); font-style:normal; font-weight:600; }
+
+  nav ul{ list-style:none; margin:0; padding:0; }
+  nav li{ margin-bottom:2px; }
+  nav button{
+    all:unset;
+    display:block;
+    cursor:pointer;
+    width:100%;
+    padding:9px 12px;
+    font-family:'Libre Franklin',sans-serif;
+    font-size:0.92rem;
+    color:var(--ink-muted);
+    border-left:2px solid transparent;
+    border-radius:2px;
+    transition:color .15s ease, border-color .15s ease, background .15s ease;
+  }
+  nav button:hover{ color:var(--ink); background:rgba(184,147,90,0.06); }
+  nav button.active{
+    color:var(--gold-bright);
+    border-left:2px solid var(--gold);
+    background:rgba(184,147,90,0.08);
+    font-weight:600;
+  }
+  nav .group-label{
+    text-transform:uppercase;
+    font-size:0.66rem;
+    letter-spacing:0.14em;
+    color:var(--ink-faint);
+    margin:20px 0 8px 12px;
+  }
+  nav .group-label:first-of-type{ margin-top:4px; }
+
+  /* ---------- main content ---------- */
+  main{ padding:46px 52px 90px 52px; max-width:840px; }
+  @media (max-width: 860px){ main{ padding:32px 22px 70px 22px; } }
+
+  .panel{ display:none; animation:rise .35s ease; }
+  .panel.active{ display:block; }
+  @keyframes rise{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .kicker{
+    color:var(--blood-bright);
+    font-size:0.74rem;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    font-weight:600;
+    margin:0 0 8px 0;
+  }
+  .panel h2.title{
+    font-size:2.5rem;
+    margin:0 0 18px 0;
+    color:var(--ink);
+    border-bottom:1px solid var(--line);
+    padding-bottom:18px;
+  }
+  .panel p{ line-height:1.7; color:var(--ink); font-size:1rem; }
+  .panel p.lede{ font-size:1.12rem; color:var(--ink); font-family:'Cormorant Garamond',serif; font-style:italic; }
+  .muted{ color:var(--ink-muted); }
+
+  h3.section-h{
+    font-size:1.35rem;
+    color:var(--gold-bright);
+    margin:34px 0 12px 0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  h3.section-h::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  ul.plain{ padding-left:1.2em; line-height:1.8; color:var(--ink); }
+  ul.plain li::marker{ color:var(--gold); }
+
+  blockquote.quote{
+    margin:18px 0;
+    padding:14px 20px;
+    border-left:2px solid var(--blood);
+    background:rgba(138,34,51,0.08);
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:var(--ink);
+  }
+
+  /* stat card grid */
+  .info-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:12px;
+    margin:14px 0 6px 0;
+  }
+  @media (max-width:600px){ .info-grid{ grid-template-columns:1fr; } }
+  .info-box{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:14px 16px;
+    border-radius:3px;
+  }
+  .info-box .label{
+    text-transform:uppercase;
+    font-size:0.65rem;
+    letter-spacing:0.12em;
+    color:var(--ink-faint);
+    margin-bottom:4px;
+  }
+  .info-box .value{ font-size:1.02rem; color:var(--ink); }
+
+  /* ---------- NPC cards ---------- */
+  .npc-list{ margin-top:10px; }
+  .npc-card{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, var(--panel-raised), var(--panel));
+    border-radius:4px;
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .npc-head{
+    all:unset;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    cursor:pointer;
+    padding:18px 22px;
+    box-sizing:border-box;
+  }
+  .npc-head:hover{ background:rgba(184,147,90,0.05); }
+  .npc-head .who{ display:flex; flex-direction:column; gap:3px; }
+  .npc-head .name{ font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--gold-bright); font-weight:600; }
+  .npc-head .role{ font-size:0.78rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.1em; }
+  .npc-head .chev{ color:var(--gold); font-size:1.1rem; transition:transform .2s ease; flex-shrink:0; margin-left:12px; }
+  .npc-card.open .chev{ transform:rotate(90deg); }
+  .npc-body{ display:none; padding:0 22px 24px 22px; }
+  .npc-card.open .npc-body{ display:block; }
+
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin:2px 0 16px 0; }
+  .tag{
+    font-size:0.72rem;
+    padding:3px 10px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    color:var(--ink-muted);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+  }
+  .tag.clan{ color:var(--gold-bright); border-color:rgba(184,147,90,0.4); }
+
+  .npc-body h4{
+    font-family:'Libre Franklin',sans-serif;
+    text-transform:uppercase;
+    font-size:0.7rem;
+    letter-spacing:0.12em;
+    color:var(--ink-faint);
+    margin:18px 0 8px 0;
+    font-weight:600;
+  }
+  .npc-body h4:first-of-type{ margin-top:4px; }
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:10px 18px;
+  }
+  @media (max-width:600px){ .stat-grid{ grid-template-columns:1fr 1fr; } }
+  .stat-row{ display:flex; justify-content:space-between; align-items:center; font-size:0.86rem; padding:3px 0; }
+  .stat-row .n{ color:var(--ink-muted); }
+  .dots{ letter-spacing:2px; color:var(--gold); white-space:nowrap; font-size:0.8rem; }
+  .dots .empty{ color:rgba(184,147,90,0.22); }
+
+  .stat-col-title{
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--blood-bright);
+    margin-bottom:4px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:4px;
+  }
+
+  .npc-body .flavor{ font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--ink); font-size:1.05rem; line-height:1.6; }
+  .secret-box{
+    margin-top:16px;
+    padding:12px 16px;
+    background:rgba(138,34,51,0.1);
+    border:1px dashed var(--blood-bright);
+    border-radius:3px;
+    font-size:0.88rem;
+    color:var(--ink);
+  }
+  .secret-box b{ color:var(--blood-bright); text-transform:uppercase; font-size:0.72rem; letter-spacing:0.08em; display:block; margin-bottom:4px; }
+
+  /* act timeline */
+  .act{
+    border-left:2px solid var(--gold);
+    padding:2px 0 6px 22px;
+    margin-bottom:26px;
+    position:relative;
+  }
+  .act::before{
+    content:'';
+    position:absolute;
+    left:-7px; top:2px;
+    width:12px; height:12px;
+    border-radius:50%;
+    background:var(--void);
+    border:2px solid var(--gold);
+  }
+  .act .act-label{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--gold); font-weight:600; }
+  .act h3{ margin:2px 0 10px 0; font-size:1.5rem; color:var(--ink); }
+
+  /* decision cards */
+  .decision-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
+  @media (max-width:700px){ .decision-grid{ grid-template-columns:1fr; } }
+  .decision-card{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:16px 18px;
+    border-radius:3px;
+  }
+  .decision-card h4{ font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--gold-bright); margin:0 0 8px 0; font-weight:600; text-transform:none; letter-spacing:0; }
+  .decision-card p{ font-size:0.9rem; margin:0; color:var(--ink-muted); }
+
+  footer.note{
+    margin-top:60px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:0.78rem;
+    color:var(--ink-faint);
+    line-height:1.6;
+  }
+
+  /* jump link inline */
+  .jumplink{
+    all:unset;
+    cursor:pointer;
+    color:var(--gold-bright);
+    border-bottom:1px solid var(--gold);
+    font-size:inherit;
+    font-family:inherit;
+    padding:0 1px;
+  }
+  .jumplink:hover{ color:var(--ink); border-color:var(--ink); }
+
+  /* timebox */
+  .timebox{
+    border:1px solid var(--gold);
+    background:rgba(184,147,90,0.06);
+    border-radius:4px;
+    padding:16px 20px;
+    margin:18px 0 30px 0;
+  }
+  .timebox .t-row{
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+    padding:7px 0;
+    border-bottom:1px dashed var(--line);
+    font-size:0.9rem;
+  }
+  .timebox .t-row:last-child{ border-bottom:none; }
+  .timebox .t-row .dur{ color:var(--gold-bright); font-weight:600; white-space:nowrap; }
+
+  /* handout cards (prontos para usar) */
+  .handout-card{
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:4px;
+    padding:16px 20px;
+    margin-bottom:14px;
+  }
+  .handout-card h4{
+    margin:0 0 6px 0;
+    color:var(--gold-bright);
+    font-size:1.2rem;
+  }
+  .handout-card p{ margin:0; }
+  .handout-card .use{
+    margin-top:10px;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-faint);
+  }
+
+  /* gallery */
+  .gallery-cat{ margin-bottom:38px; }
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(160px,1fr));
+    gap:14px;
+    margin-top:14px;
+  }
+  .photo-slot{
+    position:relative;
+    aspect-ratio:4/3;
+    border:1px dashed var(--line);
+    border-radius:4px;
+    background:var(--panel);
+    overflow:hidden;
+  }
+  .photo-slot .drop{
+    all:unset;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%; height:100%;
+    text-align:center;
+    color:var(--ink-faint);
+    font-size:0.78rem;
+    padding:10px;
+    box-sizing:border-box;
+  }
+  .photo-slot img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:none;
+  }
+  .photo-slot.filled img{ display:block; }
+  .photo-slot.filled .drop{ display:none; }
+  .photo-slot .remove-btn{
+    all:unset;
+    position:absolute;
+    top:6px; right:6px;
+    width:22px; height:22px;
+    border-radius:50%;
+    background:rgba(23,13,18,0.75);
+    color:var(--ink);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:0.85rem;
+    line-height:1;
+  }
+  .photo-slot.filled .remove-btn{ display:flex; }
+  .photo-caption{
+    display:block;
+    width:100%;
+    margin-top:6px;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    color:var(--ink);
+    font-size:0.8rem;
+    font-family:'Libre Franklin',sans-serif;
+    padding:4px 2px;
+  }
+  .photo-caption::placeholder{ color:var(--ink-faint); }
+  .photo-wrap{ display:flex; flex-direction:column; }
+  .add-slot{
+    all:unset;
+    cursor:pointer;
+    aspect-ratio:4/3;
+    border:1px dashed var(--line);
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--ink-faint);
+    font-size:1.8rem;
+    font-family:'Cormorant Garamond',serif;
+  }
+  .add-slot:hover{ color:var(--gold-bright); border-color:var(--gold); }
+
+  .export-bar{
+    margin-top:36px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .btn-primary{
+    all:unset;
+    cursor:pointer;
+    background:var(--blood);
+    color:var(--ink);
+    padding:10px 22px;
+    border-radius:3px;
+    font-size:0.88rem;
+    font-weight:600;
+    letter-spacing:0.02em;
+  }
+  .btn-primary:hover{ background:var(--blood-bright); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="glyph" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2 L20 38 M2 20 L38 20" stroke="currentColor" stroke-width="1"/>
+        <circle cx="20" cy="20" r="7" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M20 13 L20 27 M13 20 L27 20" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <h1>Sangue Plantado</h1>
+      <div class="subtitle">Crônica para Vampiro: A Máscara V5</div>
+    </div>
+    <div class="route">De <b>Natchez, Mississippi</b> a <b>Nova Orleans, Louisiana</b> — uma crônica de manipulação, política e traição.</div>
+
+    <div class="group-label">A Crônica</div>
+    <nav>
+      <ul>
+        <li><button data-tab="visao" class="active">Visão Geral</button></li>
+        <li><button data-tab="cenario">O Cenário</button></li>
+        <li><button data-tab="verdade">A Verdade Oculta</button></li>
+      </ul>
+    </nav>
+    <div class="group-label">Personagens</div>
+    <nav>
+      <ul>
+        <li><button data-tab="pngs">PNGs Principais</button></li>
+      </ul>
+    </nav>
+    <div class="group-label">Estrutura</div>
+    <nav>
+      <ul>
+        <li><button data-tab="gancho">O Gancho Inicial</button></li>
+        <li><button data-tab="atos">Ritmo do Oneshot</button></li>
+        <li><button data-tab="prontos">Prontos para Usar</button></li>
+        <li><button data-tab="twist">O Plot Twist</button></li>
+        <li><button data-tab="decisoes">Decisões dos Jogadores</button></li>
+        <li><button data-tab="finais">Finais Possíveis</button></li>
+        <li><button data-tab="extras">Extras &amp; Tom</button></li>
+      </ul>
+    </nav>
+    <div class="group-label">Referências Visuais</div>
+    <nav>
+      <ul>
+        <li><button data-tab="galeria">Galeria &amp; Mapas</button></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+
+    <!-- VISÃO GERAL -->
+    <section class="panel active" id="visao">
+      <p class="kicker">Overview</p>
+      <h2 class="title">Sangue Plantado</h2>
+      <p class="lede">Você é dono do seu destino, ou apenas uma peça bem posicionada num tabuleiro que nunca escolheu?</p>
+      <p>Os personagens são vampiros jovens — com até um século de existência — que não chegaram a <b>Natchez</b> por acaso. Eles foram plantados ali, observados à distância e deliberadamente ignorados. Anos depois, alguém finalmente veio cobrar o investimento.</p>
+
+      <h3 class="section-h">Tema da crônica</h3>
+      <ul class="plain">
+        <li>Livre-arbítrio contra ser apenas uma peça descartável</li>
+        <li>Lealdade contra sobrevivência</li>
+        <li>Ignorância confortável contra poder real</li>
+      </ul>
+
+      <h3 class="section-h">Premissa central</h3>
+      <p>Os personagens foram:</p>
+      <ul class="plain">
+        <li>Plantados numa cidade pequena demais para importar</li>
+        <li>Observados de longe por décadas</li>
+        <li>Deixados livres — porque ainda não eram úteis</li>
+      </ul>
+      <p>Agora, tornaram-se úteis. E isso nunca é uma boa notícia.</p>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="label">Ponto de partida</div>
+          <div class="value">Natchez, Mississippi</div>
+        </div>
+        <div class="info-box">
+          <div class="label">Destino</div>
+          <div class="value">Nova Orleans, Louisiana</div>
+        </div>
+        <div class="info-box">
+          <div class="label">Idade dos PJs</div>
+          <div class="value">Neonatos, até ~100 anos</div>
+        </div>
+        <div class="info-box">
+          <div class="label">Duração estimada</div>
+          <div class="value">4 a 6 horas de jogo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENÁRIO -->
+    <section class="panel" id="cenario">
+      <p class="kicker">Setting</p>
+      <h2 class="title">O Cenário</h2>
+
+      <h3 class="section-h">Natchez, Mississippi</h3>
+      <p>Uma cidade pequena e antiga às margens do Mississippi, conhecida por suas mansões antebellum preservadas e por um passado que a cidade prefere não examinar de perto demais. Pequena demais para ser relevante — oficialmente.</p>
+      <ul class="plain">
+        <li>Cerca de 15 mil habitantes</li>
+        <li>Nenhum domínio vampírico formal reconhecido</li>
+        <li>Fiscalização quase inexistente da Camarilla</li>
+        <li>Lugar perfeito para esconder "recursos" por décadas sem chamar atenção</li>
+      </ul>
+
+      <h3 class="section-h">Nova Orleans, Louisiana</h3>
+      <p>Rio acima, a poucas horas de carro, fica a cidade que decide o destino de toda a região: úmida, teatral e obcecada por aparências, com uma sociedade vampírica antiga, entrincheirada e extremamente ciente de sua própria história. Bairro Francês, Garden District, os cemitérios elevados — cada esquina é também um palco.</p>
+      <ul class="plain">
+        <li>Domínio Camarilla estabelecido há gerações</li>
+        <li>Elysiums frequentes em mansões e hotéis históricos</li>
+        <li>Vigilância política intensa — nada passa despercebido por muito tempo</li>
+        <li>Presença conhecida da Família Giovanni em negócios "discretos"</li>
+      </ul>
+
+      <blockquote class="quote">Em Natchez, ninguém olha. Em Nova Orleans, todos fingem que não estão olhando — o que é bem pior.</blockquote>
+    </section>
+
+    <!-- A VERDADE -->
+    <section class="panel" id="verdade">
+      <p class="kicker">O que os jogadores não sabem</p>
+      <h2 class="title">A Verdade Oculta</h2>
+      <p>Um ancião da Camarilla posicionou os personagens em Natchez como:</p>
+      <blockquote class="quote">"Ativos descartáveis para operações politicamente negáveis."</blockquote>
+      <p>Eles cresceram livres precisamente porque não eram importantes ainda, e ninguém queria chamar atenção para eles antes da hora certa. Agora, essa hora chegou — e "útil", nesse contexto, é quase sinônimo de "sacrificável".</p>
+    </section>
+
+    <!-- PNGS -->
+    <section class="panel" id="pngs">
+      <p class="kicker">Cast</p>
+      <h2 class="title">PNGs Principais</h2>
+      <p class="muted">Clique em cada nome para abrir a ficha completa.</p>
+
+      <div class="npc-list" id="npc-list"></div>
+    </section>
+
+    <!-- GANCHO -->
+    <section class="panel" id="gancho">
+      <p class="kicker">O início</p>
+      <h2 class="title">O Gancho Inicial</h2>
+      <p>Augusto Velloso convoca os personagens pessoalmente. Ele revela que sempre os observou, que eles são "dele" — e que chegou a hora de provar seu valor.</p>
+
+      <h3 class="section-h">A missão proposta</h3>
+      <blockquote class="quote">Assassinar o Príncipe durante um evento em Nova Orleans.</blockquote>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="label">Recompensa prometida</div>
+          <div class="value">Reconhecimento, território, status</div>
+        </div>
+        <div class="info-box">
+          <div class="label">Ameaça implícita</div>
+          <div class="value">Inutilidade equivale a morte</div>
+        </div>
+      </div>
+
+      <h3 class="section-h">A mentira</h3>
+      <p>A missão não foi feita para dar certo. Augusto sabe que os personagens são jovens demais e que a segurança do Príncipe será alta demais para eles vencerem. O plano real dele é usar a tentativa deles para:</p>
+      <ul class="plain">
+        <li>Criar caos político em Nova Orleans</li>
+        <li>Expor fraquezas reais da segurança do Príncipe</li>
+        <li>Fazer figuras influentes da Camarilla desconfiarem dela</li>
+      </ul>
+    </section>
+
+    <!-- ATOS -->
+    <section class="panel" id="atos">
+      <p class="kicker">Estrutura para 4–6 horas</p>
+      <h2 class="title">Ritmo do Oneshot</h2>
+      <p>Nada de campanha longa — aqui tudo acontece numa única noite de jogo. Ato 1 e Ato 2 viram cenas rápidas de transição; o peso da sessão fica na festa. Use os materiais prontos na aba <button class="jumplink" data-jump="prontos">Prontos para Usar →</button> para não precisar improvisar contatos e pistas na hora.</p>
+
+      <div class="timebox">
+        <div class="t-row"><span>Cena 1 — O Chamado (gancho de Augusto)</span><span class="dur">20–30 min</span></div>
+        <div class="t-row"><span>Cena 2 — Preparação relâmpago (rumo a Nova Orleans)</span><span class="dur">20–30 min</span></div>
+        <div class="t-row"><span>Cena 3 — Chegada e reconhecimento do Elysium</span><span class="dur">40–50 min</span></div>
+        <div class="t-row"><span>Cena 4 — A Noite da Festa (clímax)</span><span class="dur">2–3 h</span></div>
+        <div class="t-row"><span>Cena 5 — Epílogo e consequências</span><span class="dur">15–20 min</span></div>
+      </div>
+
+      <div class="act">
+        <div class="act-label">Cenas 1–2 · antigo "Ato 1"</div>
+        <h3>Acordar (versão rápida)</h3>
+        <p><b>Objetivo:</b> sair de Natchez já sabendo o essencial — sem sessão de compras nem investigação longa.</p>
+        <h4 class="stat-col-title" style="margin-top:14px;">Como acelerar</h4>
+        <ul class="plain">
+          <li>Não jogue a compra de armas: pergunte "o que cada um já tem" e siga em frente</li>
+          <li>Ofereça 1 contato pronto por PJ (veja "Prontos para Usar") em vez de criar do zero</li>
+          <li>Uma única cena de tensão interna do grupo já basta — não precisa de três</li>
+        </ul>
+      </div>
+
+      <div class="act">
+        <div class="act-label">Cena 3 · antigo "Ato 2"</div>
+        <h3>Ascensão (versão rápida)</h3>
+        <p><b>Objetivo:</b> uma cena só de reconhecimento no Elysium antes da festa grande — o suficiente para plantar pistas, não para uma investigação completa.</p>
+        <h4 class="stat-col-title" style="margin-top:14px;">Como acelerar</h4>
+        <ul class="plain">
+          <li>Entregue as 3 pistas prontas de forma orgânica (um rumor ouvido, um bilhete encontrado, uma informação vendida) em vez de exigir testes em cadeia</li>
+          <li>Se o grupo quiser investigar mais, ótimo — mas o cenário já funciona sem isso</li>
+        </ul>
+      </div>
+
+      <div class="act">
+        <div class="act-label">Cena 4 · clímax</div>
+        <h3>A Noite da Festa</h3>
+        <p>A missão, em teoria: <b>Infiltrar → Executar → Sobreviver.</b></p>
+        <p>O que realmente acontece: segurança pesada, outros vampiros atentos a cada movimento e traições possíveis vindas de todos os lados. Use a lista de convidados e o convite lido em voz alta (ambos em "Prontos para Usar") para dar corpo à cena sem precisar inventar NPCs na hora.</p>
+        <h4 class="stat-col-title" style="margin-top:14px;">Cenários possíveis</h4>
+        <ul class="plain">
+          <li>Tentam matar o Príncipe → falham → viram culpados públicos</li>
+          <li>Nem tentam → manipulam a situação → geram intriga política</li>
+          <li>Descobrem a verdade a tempo → se voltam contra Augusto</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PRONTOS PARA USAR -->
+    <section class="panel" id="prontos">
+      <p class="kicker">Material de mesa</p>
+      <h2 class="title">Prontos para Usar</h2>
+      <p class="muted">Entregue direto aos jogadores ou use como apoio de narração — nada aqui precisa ser criado na hora.</p>
+
+      <h3 class="section-h">Contatos prontos (1 por PJ, se quiser)</h3>
+      <div class="handout-card">
+        <h4>Suzette LaRoux</h4>
+        <p>Toreador neófita que trabalha como garçonete em eventos de elite. Conhece o layout de festas do Elysium por dentro e por fora.</p>
+        <div class="use">Use quando: os PJs precisarem de um mapa mental da festa antes de chegar</div>
+      </div>
+      <div class="handout-card">
+        <h4>Coronel Pete Hargrove</h4>
+        <p>Ghoul aposentado, contrabandista de armas na divisa entre Mississippi e Louisiana. Vende sem burocracia, sem perguntas — só sangue ou dinheiro.</p>
+        <div class="use">Use quando: alguém insistir em se armar antes da viagem</div>
+      </div>
+      <div class="handout-card">
+        <h4>Irmã Dolores</h4>
+        <p>Vidente humana, guarda um convento abandonado perto de Natchez. Dá uma pista ambígua sobre o "verdadeiro plano" de Augusto — plantando a semente do plot twist bem cedo, sem entregá-lo.</p>
+        <div class="use">Use quando: quiser semear desconfiança sobre Augusto antes mesmo da viagem</div>
+      </div>
+
+      <h3 class="section-h">Pistas prontas para o Elysium</h3>
+      <div class="handout-card">
+        <h4>O bilhete</h4>
+        <p>Um pedaço de correspondência de Augusto, endereçado a alguém em Nova Orleans, menciona "ativos descartáveis". Pode cair do bolso de um mensageiro ou ser entregue por engano aos PJs.</p>
+      </div>
+      <div class="handout-card">
+        <h4>O rumor</h4>
+        <p>Um Primogênito comenta abertamente, perto dos PJs, que desconfia da lealdade de Helena D'Ávila.</p>
+      </div>
+      <div class="handout-card">
+        <h4>A falha de segurança</h4>
+        <p>Camila Rocha vende, por um preço, a localização exata de um ponto cego na segurança da festa — perto da cozinha de serviço.</p>
+      </div>
+
+      <h3 class="section-h">Handout — o convite (leia em voz alta)</h3>
+      <blockquote class="quote">"A Família Giovanni tem a honra de convidá-los para uma recepção privada em Nova Orleans. Traje formal. Discrição absoluta. Chegadas após as 22h não serão anunciadas."</blockquote>
+
+      <h3 class="section-h">Lista de convidados (para dar cor à festa)</h3>
+      <ul class="plain">
+        <li>Helena D'Ávila — Príncipe de Nova Orleans, anfitriã de honra</li>
+        <li>Enzo Giovanni — anfitrião oficial da noite</li>
+        <li>Marcos "Cão" Ferraz — chefe de segurança, circulando discretamente</li>
+        <li>Um Primogênito Ventrue idoso, acompanhado de dois ghouls</li>
+        <li>Uma socialite Toreador que só fala de arte e nunca larga a taça</li>
+        <li>Um casal Nosferatu disfarçado de "consultores de eventos"</li>
+      </ul>
+    </section>
+
+    <!-- TWIST -->
+    <section class="panel" id="twist">
+      <p class="kicker">Reviravolta</p>
+      <h2 class="title">O Plot Twist</h2>
+      <p>Se investigarem com cuidado suficiente, os personagens descobrem:</p>
+      <ul class="plain">
+        <li>Eles foram plantados em Natchez desde o começo</li>
+        <li>Augusto nunca pretendeu que sobrevivessem à missão</li>
+        <li>Eles são bodes expiatórios perfeitos — descartáveis e sem laços em Nova Orleans</li>
+      </ul>
+
+      <h3 class="section-h">O evento e o anfitrião</h3>
+      <p>A recepção onde tudo acontece é organizada pela <b>Família Giovanni</b>, reunindo figuras importantes em torno de um acordo financeiro e necromântico. O local pode ser uma mansão isolada no Garden District ou um hotel histórico de luxo no Bairro Francês.</p>
+    </section>
+
+    <!-- DECISÕES -->
+    <section class="panel" id="decisoes">
+      <p class="kicker">Nas mãos dos jogadores</p>
+      <h2 class="title">Decisões Importantes</h2>
+      <div class="decision-grid">
+        <div class="decision-card">
+          <h4>1. Obedecer</h4>
+          <p>Resultado provável: morte, ou sobrevivência com um custo enorme.</p>
+        </div>
+        <div class="decision-card">
+          <h4>2. Trair Augusto</h4>
+          <p>Ganham o favor do Príncipe — mas viram peças de um jogo diferente, não mais livres.</p>
+        </div>
+        <div class="decision-card">
+          <h4>3. Jogar dos dois lados</h4>
+          <p>Campanha política pesada. De longe a linha mais rica de se jogar.</p>
+        </div>
+        <div class="decision-card">
+          <h4>4. Fugir</h4>
+          <p>Tornam-se independentes — abrindo espaço para uma nova crônica.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAIS -->
+    <section class="panel" id="finais">
+      <p class="kicker">Possibilidades</p>
+      <h2 class="title">Finais Possíveis</h2>
+      <ul class="plain">
+        <li>Caos total em Nova Orleans, com o Príncipe enfraquecido</li>
+        <li>Personagens mortos — o plano de Augusto funciona perfeitamente</li>
+        <li>Personagens sobem na hierarquia da cidade</li>
+        <li>A verdade vem à tona e muda o equilíbrio de poder na região</li>
+      </ul>
+    </section>
+
+    <!-- EXTRAS -->
+    <section class="panel" id="extras">
+      <p class="kicker">Para enriquecer</p>
+      <h2 class="title">Extras &amp; Tom da Campanha</h2>
+      <h3 class="section-h">Ideias extras</h3>
+      <ul class="plain">
+        <li>Um PNG que genuinamente gosta dos jogadores</li>
+        <li>Um aliado que na verdade é um espião</li>
+        <li>Um membro Giovanni que oferece "ajuda" com um preço macabro</li>
+        <li>Um caçador humano investigando o que aconteceu em Natchez</li>
+      </ul>
+      <h3 class="section-h">Tom</h3>
+      <p>Esta crônica não é sobre combate ou força bruta. É sobre informação, manipulação e sobrevivência.</p>
+      <ul class="plain">
+        <li>Se os jogadores forem diretos demais → provavelmente morrem</li>
+        <li>Se forem inteligentes → sobrevivem</li>
+        <li>Se manipularem melhor do que Augusto → brilham</li>
+      </ul>
+      <footer class="note">Ficha de referência para uso do narrador — Sangue Plantado, adaptação para cenário estadunidense (Natchez → Nova Orleans).</footer>
+    </section>
+
+    <!-- GALERIA -->
+    <section class="panel" id="galeria">
+      <p class="kicker">Sua mesa, seu material</p>
+      <h2 class="title">Galeria &amp; Mapas</h2>
+      <p class="muted">Clique em qualquer quadro para adicionar uma foto sua. As imagens ficam só no seu navegador, nada é enviado para lugar nenhum — mas também não se salvam sozinhas. Antes de fechar a página, clique em "Baixar cópia com minhas fotos" para gerar um novo arquivo com tudo que você adicionou.</p>
+
+      <div class="gallery-cat" data-cat="personagens">
+        <h3 class="section-h">Personagens importantes</h3>
+        <div class="gallery-grid"></div>
+      </div>
+
+      <div class="gallery-cat" data-cat="mapas">
+        <h3 class="section-h">Mapas &amp; locais</h3>
+        <div class="gallery-grid"></div>
+      </div>
+
+      <div class="gallery-cat" data-cat="pistas">
+        <h3 class="section-h">Pistas &amp; itens</h3>
+        <div class="gallery-grid"></div>
+      </div>
+
+      <div class="gallery-cat" data-cat="atmosfera">
+        <h3 class="section-h">Atmosfera &amp; referências</h3>
+        <div class="gallery-grid"></div>
+      </div>
+
+      <div class="export-bar">
+        <button class="btn-primary" id="export-btn">Baixar cópia com minhas fotos</button>
+        <span class="muted" style="font-size:0.82rem;">Gera um novo arquivo .html com tudo que você adicionou aqui.</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const npcs = [
+    {
+      name: "Augusto Velloso",
+      role: "O Manipulador",
+      clan: "Ventrue",
+      tags: ["Geração 8ª", "~250 anos"],
+      concept: "Controlador político que usa neonatos como ferramentas descartáveis.",
+      goal: "Derrubar o Príncipe sem sujar as próprias mãos.",
+      personality: ["Calmo, educado, nunca perde o controle", "Fala como mentor, age como carrasco", "Sempre parece estar dois passos à frente"],
+      roleplay: "Fale baixo e pausado. Nunca ameace diretamente — implique.",
+      line: "Você quer sobreviver… então seja útil.",
+      physical: {"Força":2,"Destreza":3,"Vigor":3},
+      social: {"Carisma":4,"Manipulação":5,"Aparência":3},
+      mental: {"Inteligência":4,"Raciocínio":4,"Determinação":5},
+      skills: {"Persuasão":5,"Subterfúgio":4,"Intimidação":4,"Liderança":5,"Insight":4,"Política":5},
+      disciplines: {"Dominate":4,"Presence":3,"Fortitude":2},
+      secret: "Nunca pretende que os jogadores sobrevivam."
+    },
+    {
+      name: "Helena D'Ávila",
+      role: "O Alvo — Príncipe de Nova Orleans",
+      clan: "Toreador",
+      tags: ["Geração 9ª", "~180 anos"],
+      concept: "Líder carismática que governa através da influência social.",
+      goal: "Manter estabilidade política e poder na cidade.",
+      personality: ["Elegante e teatral", "Gosta de ser admirada", "Não é ingênua — sabe que tem inimigos"],
+      roleplay: "Fale com charme e leve ironia. Sempre parece em controle. Nunca levanta a voz.",
+      physical: {"Força":2,"Destreza":3,"Vigor":2},
+      social: {"Carisma":5,"Manipulação":4,"Aparência":5},
+      mental: {"Inteligência":3,"Raciocínio":4,"Determinação":4},
+      skills: {"Etiqueta":5,"Performance":4,"Persuasão":5,"Insight":4,"Política":4},
+      disciplines: {"Presence":5,"Auspex":3,"Celerity":2},
+      secret: "Confia demais na própria posição.",
+      secretLabel: "Fraqueza"
+    },
+    {
+      name: "Enzo Giovanni",
+      role: "O Anfitrião",
+      clan: "Família Giovanni",
+      tags: ["Geração 10ª", "~120 anos"],
+      concept: "Necromante negociador, anfitrião da recepção.",
+      goal: "Fortalecer alianças e lucrar com elas.",
+      personality: ["Sarcástico", "Frio", "Extremamente pragmático"],
+      roleplay: "Tom irônico, sorriso constante. Trata tudo — literalmente tudo — como negócio.",
+      physical: {"Força":2,"Destreza":2,"Vigor":3},
+      social: {"Carisma":3,"Manipulação":4,"Aparência":3},
+      mental: {"Inteligência":4,"Raciocínio":4,"Determinação":4},
+      skills: {"Ocultismo":5,"Finanças":4,"Persuasão":3,"Subterfúgio":3},
+      disciplines: {"Oblivion":4,"Fortitude":2},
+      secret: "Vai sobreviver a qualquer custo — troca de lado sem hesitar."
+    },
+    {
+      name: "Marcos \u201cCão\u201d Ferraz",
+      role: "Chefe de Segurança",
+      clan: "Brujah",
+      tags: ["Geração 10ª", "~90 anos"],
+      concept: "Executor violento, leal ao Príncipe.",
+      goal: "Eliminar qualquer ameaça antes que ela cresça.",
+      personality: ["Direto", "Desconfiado", "Violento quando necessário"],
+      roleplay: "Poucas palavras. Olhar constante de ameaça. Testa os jogadores o tempo todo.",
+      physical: {"Força":4,"Destreza":4,"Vigor":4},
+      social: {"Carisma":2,"Manipulação":3,"Aparência":2},
+      mental: {"Inteligência":2,"Raciocínio":3,"Determinação":3},
+      skills: {"Briga":5,"Armas":4,"Intimidação":4,"Atletismo":4},
+      disciplines: {"Potence":4,"Celerity":3},
+      secret: "Se der merda, é ele quem entra.",
+      secretLabel: "Função"
+    },
+    {
+      name: "Camila Rocha",
+      role: "Aliada Ambígua",
+      clan: "Nosferatu",
+      tags: ["Geração 11ª", "~70 anos"],
+      concept: "Informante que vende dados para todos os lados.",
+      goal: "Lucro e sobrevivência, nessa ordem.",
+      personality: ["Sarcástica", "Inteligente", "Nunca confiável"],
+      roleplay: "Fala como quem sabe mais do que diz. Sempre cobra algo em troca.",
+      physical: {"Força":2,"Destreza":3,"Vigor":3},
+      social: {"Carisma":2,"Manipulação":4,"Aparência":1},
+      mental: {"Inteligência":4,"Raciocínio":4,"Determinação":4},
+      skills: {"Investigação":5,"Tecnologia":4,"Subterfúgio":4,"Insight":4},
+      disciplines: {"Obfuscate":4,"Animalism":2},
+      secret: "Sabe que os jogadores são descartáveis."
+    },
+    {
+      name: "Rafael Torres",
+      role: "\u201cAliado\u201d do Mesmo Clã",
+      clan: "Adapte ao clã do grupo",
+      tags: ["Geração 11ª"],
+      concept: "Aliado inicial — e possível traidor.",
+      goal: "Subir na hierarquia custe o que custar.",
+      personality: ["Amigável demais", "Competitivo por baixo do sorriso"],
+      roleplay: "Ajuda… mas está sempre testando. Pode entregar o grupo sem pestanejar.",
+      secret: "Sua função narrativa é forçar paranoia dentro do grupo.",
+      secretLabel: "Função narrativa"
+    }
+  ];
+
+  function dots(n, max=5){
+    let out = '';
+    for(let i=0;i<max;i++){ out += i < n ? '●' : '<span class="empty">●</span>'; }
+    return `<span class="dots">${out}</span>`;
+  }
+
+  function statBlock(title, obj){
+    if(!obj) return '';
+    const rows = Object.entries(obj).map(([k,v]) => `<div class="stat-row"><span class="n">${k}</span>${dots(v)}</div>`).join('');
+    return `<div><div class="stat-col-title">${title}</div>${rows}</div>`;
+  }
+
+  const list = document.getElementById('npc-list');
+  npcs.forEach((n, idx) => {
+    const card = document.createElement('div');
+    card.className = 'npc-card';
+    card.innerHTML = `
+      <button class="npc-head">
+        <div class="who">
+          <span class="name">${n.name}</span>
+          <span class="role">${n.role}</span>
+        </div>
+        <span class="chev">▸</span>
+      </button>
+      <div class="npc-body">
+        <div class="tag-row">
+          <span class="tag clan">${n.clan}</span>
+          ${n.tags.map(t=>`<span class="tag">${t}</span>`).join('')}
+        </div>
+        <p class="flavor">${n.concept}</p>
+        <h4>Objetivo</h4>
+        <p>${n.goal}</p>
+        <h4>Personalidade</h4>
+        <ul class="plain">${n.personality.map(p=>`<li>${p}</li>`).join('')}</ul>
+        <h4>Interpretação</h4>
+        <p>${n.roleplay}</p>
+        ${n.line ? `<blockquote class="quote">${n.line}</blockquote>` : ''}
+        ${(n.physical || n.skills || n.disciplines) ? `
+        <h4>Ficha</h4>
+        <div class="stat-grid">
+          ${statBlock('Físicos', n.physical)}
+          ${statBlock('Sociais', n.social)}
+          ${statBlock('Mentais', n.mental)}
+        </div>
+        <div class="stat-grid" style="margin-top:14px;">
+          ${statBlock('Perícias', n.skills)}
+          ${statBlock('Disciplinas', n.disciplines)}
+        </div>` : ''}
+        <div class="secret-box">
+          <b>${n.secretLabel || 'Segredo'}</b>
+          ${n.secret}
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+    card.querySelector('.npc-head').addEventListener('click', () => {
+      card.classList.toggle('open');
+    });
+  });
+
+  // tab switching
+  const buttons = document.querySelectorAll('nav button[data-tab]');
+  const panels = document.querySelectorAll('.panel');
+  function activateTab(id){
+    buttons.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+    panels.forEach(p => p.classList.toggle('active', p.id === id));
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  buttons.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
+  document.querySelectorAll('.jumplink[data-jump]').forEach(link => {
+    link.addEventListener('click', () => activateTab(link.dataset.jump));
+  });
+
+  // ---------- galeria: fotos, mapas e referências ----------
+  function makePhotoSlot(){
+    const wrap = document.createElement('div');
+    wrap.className = 'photo-wrap';
+
+    const slot = document.createElement('div');
+    slot.className = 'photo-slot';
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.hidden = true;
+
+    const drop = document.createElement('button');
+    drop.className = 'drop';
+    drop.type = 'button';
+    drop.textContent = '+ adicionar foto';
+
+    const img = document.createElement('img');
+    img.alt = '';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.type = 'button';
+    removeBtn.textContent = '✕';
+
+    const caption = document.createElement('input');
+    caption.type = 'text';
+    caption.className = 'photo-caption';
+    caption.placeholder = 'Legenda (ex: Augusto Velloso)';
+
+    drop.addEventListener('click', () => input.click());
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        img.src = e.target.result;
+        slot.classList.add('filled');
+      };
+      reader.readAsDataURL(file);
+    });
+    removeBtn.addEventListener('click', () => {
+      img.src = '';
+      slot.classList.remove('filled');
+      input.value = '';
+    });
+
+    slot.appendChild(drop);
+    slot.appendChild(img);
+    slot.appendChild(removeBtn);
+    slot.appendChild(input);
+    wrap.appendChild(slot);
+    wrap.appendChild(caption);
+    return wrap;
+  }
+
+  document.querySelectorAll('.gallery-grid').forEach(grid => {
+    for(let i=0;i<3;i++){ grid.appendChild(makePhotoSlot()); }
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-slot';
+    addBtn.type = 'button';
+    addBtn.textContent = '+';
+    addBtn.addEventListener('click', () => grid.insertBefore(makePhotoSlot(), addBtn));
+    grid.appendChild(addBtn);
+  });
+
+  // export current page (with embedded photos as base64) as a standalone file
+  document.getElementById('export-btn').addEventListener('click', () => {
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('input[type=file]').forEach(i => i.removeAttribute('value'));
+    // cloneNode doesn't carry live values typed by the user, so copy them over by matching order
+    const liveCaptions = document.querySelectorAll('.photo-caption');
+    const cloneCaptions = clone.querySelectorAll('.photo-caption');
+    liveCaptions.forEach((c, i) => cloneCaptions[i] && cloneCaptions[i].setAttribute('value', c.value));
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    const blob = new Blob([html], {type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sangue-plantado-preenchido.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+</script>
+</body>
+</html>
